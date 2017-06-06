@@ -39,8 +39,14 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bhojanusers',
     'bhojanmenu',
-    'bhojanorder'
+    'bhojanorder',
+    'graphene_django',
+    'django_filters'
 ]
+
+GRAPHENE = {
+    'SCHEMA': 'bhojan.schema.schema'
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

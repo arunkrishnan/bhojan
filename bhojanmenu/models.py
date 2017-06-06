@@ -14,9 +14,11 @@ class Food(models.Model):
     cuisine = models.CharField(max_length=50)
     category = models.CharField(max_length=10, choices=FOODCATEGORY)
 
+    def __str__(self):
+        return str(self.name)
+
 class Menu(models.Model):
-    food = models.ForeignKey(Food)
-    menu_date = models.DateField()
+    food = models.ForeignKey(Food, related_name='menu')
     availability_start_time = models.DateTimeField()
     availability_end_time = models.DateTimeField()
     quantity = models.IntegerField()
