@@ -18,9 +18,9 @@ class MenuNode(DjangoObjectType):
     class Meta:
         model = Menu
         filter_fields = {'availability_start_time': ['exact', 'istartswith'],
-                         'availability_end_time':['gt','lt', 'exact'],
+                         'availability_end_time':['gt', 'lt', 'exact'],
                          'quantity':['gt', 'lt', 'exact'],
-                         'price': ['gt', 'lt','exact']
+                         'price': ['gt', 'lt', 'exact']
                         }
         interfaces = (relay.Node, )
 
