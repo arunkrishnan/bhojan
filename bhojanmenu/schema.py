@@ -119,7 +119,7 @@ class UpdateMenu(ClientIDMutation):
 
 
 class DeleteFood(ClientIDMutation):
-    success = String()
+    food = Field(FoodNode)
     class Input:
         id = String()
 
@@ -127,11 +127,11 @@ class DeleteFood(ClientIDMutation):
     def mutate_and_get_payload(cls, input, context, info):
         food = Food.objects.get(pk=from_global_id(input.get('id'))[1])
         food.delete()
-        return DeleteFood(success=True)
+        return DeleteFood(food=food)
 
 
 class DeleteMenu(ClientIDMutation):
-    success = String()
+    menu = Field(MenuNode)
     class Input:
         id = String()
 
@@ -139,7 +139,7 @@ class DeleteMenu(ClientIDMutation):
     def mutate_and_get_payload(cls, input, context, info):
         menu = Menu.objects.get(pk=from_global_id(input.get('id'))[1])
         menu.delete()
-        return DeleteMenu(success=True)
+        return DeleteMenu(menu=menu)
 
 
 class Query(AbstractType):

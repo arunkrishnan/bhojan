@@ -29,7 +29,7 @@ class OrderItemsNode(DjangoObjectType):
 
 
 class NewOrder(ClientIDMutation):
-    success = String()
+    order = Field(OrderNode)
     class Input:
         customer = String()
         amount = Float()
@@ -49,11 +49,11 @@ class NewOrder(ClientIDMutation):
             status = input.get('status')
         )
         order.save()
-        return NewOrder(success=True)
+        return NewOrder(order=order)
 
 
 class NewOrderItems(ClientIDMutation):
-    success = String()
+    order_items = Field(OrderItemsNode)
     class Input:
         order = String()
         food = String()
@@ -67,11 +67,11 @@ class NewOrderItems(ClientIDMutation):
             quantity = input.get('quantity')
         )
         order_items.save()
-        return NewOrderItems(success=True)
+        return NewOrderItems(order_items=order_items)
 
 
 class UpdateOrder(ClientIDMutation):
-    success = String()
+    order = Field(OrderNode)
     class Input:
         id = String()
         amount = Float()
@@ -95,11 +95,11 @@ class UpdateOrder(ClientIDMutation):
         if input.get('status'):
             order.status = input.get('status')
         order.save()
-        return UpdateOrder(success=True)
+        return UpdateOrder(order=order)
 
 
 class UpdateOrderItems(ClientIDMutation):
-    success = String()
+    order_items = Field(OrderItemsNode)
     class Input:
         id = String()
         quantity = Int()
@@ -110,11 +110,11 @@ class UpdateOrderItems(ClientIDMutation):
         if input.get('quantity'):
             order_items.quantity = input.get('quantity')
         order_items.save()
-        return UpdateOrderItems(success=True)
+        return UpdateOrderItems(order_items=order_items)
 
 
 class DeleteOrder(ClientIDMutation):
-    success = String()
+    order = Field(OrderNode)
     class Input:
         id = String()
 
@@ -122,11 +122,11 @@ class DeleteOrder(ClientIDMutation):
     def mutate_and_get_payload(cls, input, context, info):
         order = Order.objects.get(pk=from_global_id(input.get('id'))[1])
         order.delete()
-        return DeleteOrder(success=True)
+        return DeleteOrder(order=order)
 
 
 class DeleteOrderItems(ClientIDMutation):
-    success = String()
+    order_items = Field(OrderItemsNode)
     class Input:
         id = String()
 
@@ -134,7 +134,7 @@ class DeleteOrderItems(ClientIDMutation):
     def mutate_and_get_payload(cls, input, context, info):
         order_item = OrderItems.objects.get(pk=from_global_id(input.get('id'))[1])
         order_item.delete()
-        return DeleteOrderItems(success=True)
+        return DeleteOrderItems(order_items=order_items)
 
 
 class Query(AbstractType):
