@@ -123,6 +123,8 @@ class Query(AbstractType):
     all_customer = DjangoFilterConnectionField(CustomerNode)
     customer_address = relay.Node.Field(CustomerAddressNode)
     all_customer_address = DjangoFilterConnectionField(CustomerAddressNode)
+    delivery_executive = relay.Node.Field(DeliveryExecutiveNode)
+    all_delivery_executive = DjangoFilterConnectionField(DeliveryExecutiveNode)
 
 
 class Mutation(AbstractType):
