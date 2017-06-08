@@ -37,6 +37,7 @@ class NewOrder(ClientIDMutation):
         delivery_executive = String()
         delivery_address = String()
         status = String()
+
     @classmethod
     def mutate_and_get_payload(cls, input, context, info):
         order = Order(
@@ -57,6 +58,7 @@ class NewOrderItems(ClientIDMutation):
         order = String()
         food = String()
         quantity = Int()
+
     @classmethod
     def mutate_and_get_payload(cls, input, context, info):
         order_items = OrderItems(
@@ -66,6 +68,73 @@ class NewOrderItems(ClientIDMutation):
         )
         order_items.save()
         return NewOrderItems(success=True)
+
+
+class UpdateOrder(ClientIDMutation):
+    success = String()
+    class Input:
+        id = String()
+        amount = Float()
+        delivery_executive = String()
+        delivery_address = String()
+        status = String()
+
+    @classmethod
+    def mutate_and_get_payload(cls, input, context, info):
+        order = Order.objects.get(pk=from_global_id(input.get('id'))[1])
+        if input.get('amount'):
+            order.amount = input.get('amount')
+        exec_id = input.get('delivery_executive')
+        if exec_id:
+            delivery_exec_obj = DeliveryExecutive.objects.get(pk=from_global_id(exec_id)[1])
+            order.delivery_executive = delivery_exec_obj
+        addr = input.get('delivery_address')
+        if addr:
+            delivery_addr_obj = CustomerAddress.objects.get(pk=from_global_id(addr)[1])
+            order.delivery_address = delivery_addr_obj
+        if input.get('status'):
+            order.status = input.get('status')
+        order.save()
+        return UpdateOrder(success=True)
+
+
+class UpdateOrderItems(ClientIDMutation):
+    success = String()
+    class Input:
+        id = String()
+        quantity = Int()
+
+    @classmethod
+    def mutate_and_get_payload(cls, input, context, info):
+        order_items = OrderItems.objects.get(pk=from_global_id(input.get('id'))[1])
+        if input.get('quantity'):
+            order_items.quantity = input.get('quantity')
+        order_items.save()
+        return UpdateOrderItems(success=True)
+
+
+class DeleteOrder(ClientIDMutation):
+    success = String()
+    class Input:
+        id = String()
+
+    @classmethod
+    def mutate_and_get_payload(cls, input, context, info):
+        order = Order.objects.get(pk=from_global_id(input.get('id'))[1])
+        order.delete()
+        return DeleteOrder(success=True)
+
+
+class DeleteOrderItems(ClientIDMutation):
+    success = String()
+    class Input:
+        id = String()
+
+    @classmethod
+    def mutate_and_get_payload(cls, input, context, info):
+        order_item = OrderItems.objects.get(pk=from_global_id(input.get('id'))[1])
+        order_item.delete()
+        return DeleteOrderItems(success=True)
 
 
 class Query(AbstractType):
@@ -78,3 +147,7 @@ class Query(AbstractType):
 class Mutation(AbstractType):
     new_order = NewOrder.Field()
     new_order_items = NewOrderItems.Field()
+    update_order = UpdateOrder.Field()
+    update_order_items = UpdateOrderItems.Field()
+    delete_order = DeleteOrder.Field()
+    delete_order_items = DeleteOrderItems.Field()
